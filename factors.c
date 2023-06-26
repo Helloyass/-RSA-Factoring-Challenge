@@ -1,46 +1,33 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
+#!/usr/bin/python3
+"""Module that factorize as many numbers as possible
+ into a product of two smaller numbers."""
+from sys import argv
 
-int main(int argc, char *argv[])
-{
-	FILE *stream;
-	char *line = NULL;
-	size_t len = 0;
-	long long flag = 1, div, rest, number, counter;
-	ssize_t nread;
 
-	if (argc != 2) {
-		fprintf(stderr, "Usage: %s <file>\n", argv[0]);
-		exit(EXIT_FAILURE);
-	}
+def factorize(value):
+    """"print a simple descomposition of an integer > 1"""
+    i = 2
 
-	stream = fopen(argv[1], "r");
-	if (stream == NULL) {
-		perror("fopen");
-		exit(EXIT_FAILURE);
-	}
+    if value < 2:
+        return
+    print()
+    print(value, "<- value-bef")
+    while value % i:
+        i += 1
+    print("{:.0f}={:.0f}*{:.0f}".format(value, value / i, i))
+    print(value, "<- value-aft")
+    print()
 
-	while ((nread = getline(&line, &len, stream)) != -1) {
-		flag = 1, div = 2;
-		number = atoll(line);
-		while (flag) {
-			rest = number % div;
-			if (!rest) {
-				counter = number / div;
-				printf("%lld=%lld*%lld\n", number, counter, div);
-				flag = 0;
-			}
-			div++;
-		}
-	}
+if len(argv) != 2:
+    exit()
 
-	free(line);
-	fclose(stream);
-	exit(EXIT_SUCCESS);
-}
+try:
+    with open(argv[1]) as file:
+        line = file.readline()
+
+        while line != "":
+            value = int(line.split('\n')[0])
+            factorize(value)
+            line = file.readline()
+except:
+    pass
